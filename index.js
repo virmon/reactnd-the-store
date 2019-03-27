@@ -1,4 +1,6 @@
-function createStore() {
+// Library code
+// The Store
+function createStore(reducer) {
     /** 
      * The store should have four parts
      * 1. The state
@@ -16,11 +18,35 @@ function createStore() {
         listeners.push(listener)
     }
 
+    const dispatch = (action) => {
+        state = reducer(state, action)
+        listeners.forEach(listener => listener())
+    }
+
     return {
-        getState
+        getState,
+        subscribe,
+        dispatch
     }
 }
 
+// App code
+/**
+ *  Reducer (must be pure function)
+ *  @param {array} state
+ *  @param {string} action
+ */ 
+function todos (state = [], action) {
+    if(action.type === 'ADD_TODO') {
+        return state.concat(action.todo)
+    }
+
+    return state
+}
+
+
+
+/*
 const store = createStore()
 store.subscribe(() => {
     console.log("The new state is: ", store.getState())
@@ -28,3 +54,9 @@ store.subscribe(() => {
 store.subscribe(() => {
     console.log("The store changed")
 })
+
+const receivePost = post => ({
+    type: 'RECEIVE_POST',
+    post: post
+})
+*/
