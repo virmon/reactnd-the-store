@@ -46,12 +46,15 @@
             /** used to provide a listener function the store will call when the state changes */
             const subscribe = (listener) => {
                 listeners.push(listener)
+                return () => {
+                    listeners = listeners.filter((l) => l !== listener)
+                }
             }
 
             /** used to make changes to the store state */
             const dispatch = (action) => {
                 state = reducer(state, action)
-                listeners.forEach(listener => listener())
+                listeners.forEach((listener) => listener())
             }
 
             return {
@@ -136,8 +139,8 @@
         /** rootReducer */
         function app (state = {}, action) {
             return {
-                todo: todos(state.todos, action),
-                goal: goals(state.goals, action)
+                todos: todos(state.todos, action),
+                goals: goals(state.goals, action)
             }
         }
 
