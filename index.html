@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Udacity Todos Goals</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <div>
+        <h1>Todo List</h1>
+        <input id="todo" type="text" placeholder="Add Todo" />
+        <button id="todoBtn">Add Todo</button>
+        <ul id="todos">
+
+        </ul>
+    </div>
+    <div>
+        <h1>Goals List</h1>
+        <input id="goal" type="text" placeholder="Add Goal" />
+        <button id="goalBtn">Add Goal</button>
+        <ul id="goals">
+
+        </ul>
+    </div>
+    <script type="text/javascript">
+        // Library code
+        /** @description The Store 
+         *  @param {function} reducer
+         */
+        function createStore(reducer) {
+            /** 
+             * The store should have four parts
+             * 1. The state
+             * 2. Get the state
+             * 3. Listen to changes on state
+             * 4. Update the state
+            */
+
+            let state
+            let listeners = []
+
+            /** used to get the current state from the store */
+            const getState = () => state
+
+            /** used to provide a listener function the store will call when the state changes */
+            const subscribe = (listener) => {
+                listeners.push(listener)
+            }
+
+            /** used to make changes to the store state */
+            const dispatch = (action) => {
+                state = reducer(state, action)
+                listeners.forEach(listener => listener())
+            }
+
+            return {
+                getState,
+                subscribe,
+                dispatch
+            }
+        }
+
+        // App code
+        const ADD_TODO = 'ADD_TODO'
+        const REMOVE_TODO = 'REMOVE_TODO'
+        const TOGGLE_TODO = 'TOGGLE_TODO'
+        const ADD_GOAL = 'ADD_GOAL'
+        const REMOVE_GOAL = 'REMOVE_GOAL'
+
+        // Action creators
+        function addTodoAction (todo) {
+            return {
+                type: ADD_TODO,
+                todo
+            }
+        }
+
+        function removeTodoAction (id) {
+            return {
+                type: REMOVE_TODO,
+                id
+            }
+        }
+
+        function toggleTodoAction (id) {
+            return {
+                type: TOGGLE_TODO,
+                id
+            }
+        }
+
+        function addGoalAction (goal) {
+            return {
+                type: ADD_GOAL,
+                goal
+            }
+        }
+
+        function removeGoalAction (id) {
+            return {
+                type: REMOVE_GOAL,
+                id
+            }
+        }
+        /**
+         *  Reducer (must be pure function)
+         *  @param {array} state
+         *  @param {string} action
+         */ 
+        function todos (state = [], action) {
+            switch(action.type) {
+                case 'ADD_TODO' :
+                    return state.concat([action.todo])
+                case 'REMOVE_TODO' :
+                    return state.filter((todo) => todo.id !== action.id)
+                case 'TOGGLE_TODO' :
+                    return state.map((todo) => todo.id !== action.id ? todo :
+                        Object.assign({}, todo, { complete: !todo.complete }))
+                default :
+                    return state
+            }
+        }
+
+        function goals (state = [], action) {
+            switch(action.type) {
+                case 'ADD_GOAL' :
+                    return state.concat([action.goal])
+                case 'REMOVE_GOAL' :
+                    return state.filter((goal) => goal.id !== action.id)
+                default :
+                    return state
+            }
+        }
+
+        /** rootReducer */
+        function app (state = {}, action) {
+            return {
+                todo: todos(state.todos, action),
+                goal: goals(state.goals, action)
+            }
+        }
+
+        /** must pass a reducer function when invoked */
+        const store = createStore(app)
+
+        /** listens to state changes */
+        store.subscribe(() => {
+            console.log("The new state is: ", store.getState())
+        })
+
+        /** update the state */
+        store.dispatch(addTodoAction({
+            id: 0,
+            name: 'Walk the dog',
+            complete: false,
+        }))
+
+        store.dispatch(addTodoAction({
+            id: 1,
+            name: 'Wash the car',
+            complete: false,
+        }))
+
+        store.dispatch(addTodoAction({
+            id: 2,
+            name: 'Go to the gym',
+            complete: true,
+        }))
+
+        store.dispatch(removeTodoAction(1))
+
+        store.dispatch(toggleTodoAction(0))
+
+        store.dispatch(addGoalAction({
+            id: 0,
+            name: 'Learn Redux'
+        }))
+
+        store.dispatch(addGoalAction({
+            id: 1,
+            name: 'Lose 20 pounds'
+        }))
+
+        store.dispatch(removeGoalAction(0))
+    </script>
+</body>
+</html>
