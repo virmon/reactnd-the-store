@@ -66,8 +66,16 @@ function goals (state = [], action) {
     }
 }
 
+/** rootReducer */
+function app (state = {}, action) {
+    return {
+        todo: todos(state.todos, action),
+        goal: goals(state.goals, action)
+    }
+}
+
 /** must pass a reducer function when invoked */
-const store = createStore(todos)
+const store = createStore(app)
 
 /** listens to state changes */
 store.subscribe(() => {
