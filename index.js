@@ -1,5 +1,7 @@
 // Library code
-// The Store
+/** @description The Store 
+ *  @param {function} reducer
+ */
 function createStore(reducer) {
     /** 
      * The store should have four parts
@@ -12,12 +14,15 @@ function createStore(reducer) {
     let state
     let listeners = []
 
+    /** used to get the current state from the store */
     const getState = () => state
 
+    /** used to provide a listener function the store will call when the state changes */
     const subscribe = (listener) => {
         listeners.push(listener)
     }
 
+    /** used to make changes to the store state */
     const dispatch = (action) => {
         state = reducer(state, action)
         listeners.forEach(listener => listener())
@@ -44,12 +49,15 @@ function todos (state = [], action) {
     return state
 }
 
+/** must pass a reducer function when invoked */
 const store = createStore(todos)
 
+/** listens to state changes */
 store.subscribe(() => {
     console.log("The new state is: ", store.getState())
 })
 
+/** update the state */
 store.dispatch({
     type: 'ADD_TODO',
     todo: {
@@ -59,7 +67,3 @@ store.dispatch({
     }
 })
 
-const receivePost = post => ({
-    type: 'RECEIVE_POST',
-    post: post
-})
