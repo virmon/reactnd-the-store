@@ -36,6 +36,11 @@ function createStore(reducer) {
 }
 
 // App code
+const ADD_TODO = 'ADD_TODO'
+const REMOVE_TODO = 'REMOVE_TODO'
+const TOGGLE_TODO = 'TOGGLE_TODO'
+const ADD_GOAL = 'ADD_GOAL'
+const REMOVE_GOAL = 'REMOVE_GOAL'
 /**
  *  Reducer (must be pure function)
  *  @param {array} state
@@ -48,7 +53,7 @@ function todos (state = [], action) {
         case 'REMOVE_TODO' :
             return state.filter((todo) => todo.id !== action.id)
         case 'TOGGLE_TODO' :
-            return stat.map((todo) => todo.id !== action.id ? todo :
+            return state.map((todo) => todo.id !== action.id ? todo :
                 Object.assign({}, todo, { complete: !todo.complete }))
         default :
             return state
@@ -84,11 +89,60 @@ store.subscribe(() => {
 
 /** update the state */
 store.dispatch({
-    type: 'ADD_TODO',
-    todo: {
-        id: 0,
-        name: 'Learn Redux',
-        complete: false
-    }
+  type: ADD_TODO,
+  todo: {
+    id: 0,
+    name: 'Walk the dog',
+    complete: false,
+  }
+})
+
+store.dispatch({
+  type: ADD_TODO,
+  todo: {
+    id: 1,
+    name: 'Wash the car',
+    complete: false,
+  }
+})
+
+store.dispatch({
+  type: ADD_TODO,
+  todo: {
+    id: 2,
+    name: 'Go to the gym',
+    complete: true,
+  }
+})
+
+store.dispatch({
+  type: REMOVE_TODO,
+  id: 1
+})
+
+store.dispatch({
+  type: TOGGLE_TODO,
+  id: 0
+})
+
+store.dispatch({
+  type: ADD_GOAL,
+  goal: {
+    id: 0,
+    name: 'Learn Redux'
+  }
+})
+
+store.dispatch({
+  type: ADD_GOAL,
+  goal: {
+    id: 1,
+    name: 'Lose 20 pounds'
+  }
+})
+
+store.dispatch({
+  type: REMOVE_GOAL,
+  id: 0
 })
 
