@@ -44,19 +44,22 @@ function todos (state = [], action) {
     return state
 }
 
+const store = createStore(todos)
 
-
-/*
-const store = createStore()
 store.subscribe(() => {
     console.log("The new state is: ", store.getState())
 })
-store.subscribe(() => {
-    console.log("The store changed")
+
+store.dispatch({
+    type: 'ADD_TODO',
+    todo: {
+        id: 0,
+        name: 'Learn Redux',
+        complete: false
+    }
 })
 
 const receivePost = post => ({
     type: 'RECEIVE_POST',
     post: post
 })
-*/
