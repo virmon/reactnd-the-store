@@ -164,6 +164,25 @@
 
         }
 
+        const notifyer = (store) => (next) => (action) => {
+            if (
+                action.type === ADD_GOAL
+            ) {
+                alert("That's a great goal!");
+                return next(action)
+            }
+
+            if (
+                action.type === ADD_TODO
+            ) {
+                alert("Don't forget to " + action.todo.name + "!");
+                return next(action)
+            }
+
+            return next(action)
+            
+        }
+
         const logger = (store) => (next) => (action) => {
             console.group(action.type)
                 console.log('The action: ', action)
