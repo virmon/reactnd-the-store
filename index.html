@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Udacity Todos Goals</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/3.7.2/redux.min.js"></script>
 </head>
 <body>
     <div>
@@ -28,41 +29,41 @@
         /** @description The Store 
          *  @param {function} reducer
          */
-        function createStore(reducer) {
-            /** 
-             * The store should have four parts
-             * 1. The state
-             * 2. Get the state
-             * 3. Listen to changes on state
-             * 4. Update the state
-            */
+        // function createStore(reducer) {
+        //     /** 
+        //      * The store should have four parts
+        //      * 1. The state
+        //      * 2. Get the state
+        //      * 3. Listen to changes on state
+        //      * 4. Update the state
+        //     */
 
-            let state
-            let listeners = []
+        //     let state
+        //     let listeners = []
 
-            /** used to get the current state from the store */
-            const getState = () => state
+        //     /** used to get the current state from the store */
+        //     const getState = () => state
 
-            /** used to provide a listener function the store will call when the state changes */
-            const subscribe = (listener) => {
-                listeners.push(listener)
-                return () => {
-                    listeners = listeners.filter((l) => l !== listener)
-                }
-            }
+        //     /** used to provide a listener function the store will call when the state changes */
+        //     const subscribe = (listener) => {
+        //         listeners.push(listener)
+        //         return () => {
+        //             listeners = listeners.filter((l) => l !== listener)
+        //         }
+        //     }
 
-            /** used to make changes to the store state */
-            const dispatch = (action) => {
-                state = reducer(state, action)
-                listeners.forEach((listener) => listener())
-            }
+        //     /** used to make changes to the store state */
+        //     const dispatch = (action) => {
+        //         state = reducer(state, action)
+        //         listeners.forEach((listener) => listener())
+        //     }
 
-            return {
-                getState,
-                subscribe,
-                dispatch
-            }
-        }
+        //     return {
+        //         getState,
+        //         subscribe,
+        //         dispatch
+        //     }
+        // }
 
         // App code
         const ADD_TODO = 'ADD_TODO'
@@ -144,8 +145,31 @@
             }
         }
 
+        function checkAndDispatch (store, action) {
+            if (
+                action.type === ADD_TODO &&
+                action.todo.name.toLowerCase().includes('bitcoin')
+            ) {
+                return alert("Nope, that's a bad idea.");
+            }
+
+            if (
+                action.type === ADD_GOAL &&
+                action.goal.name.toLowerCase().includes('bitcoin')
+            ) {
+                return alert("Nope, that's a bad idea.");
+            }
+
+            return store.dispatch(action);
+
+        }
+
         /** must pass a reducer function when invoked */
-        const store = createStore(app)
+        // const store = createStore(app)
+        const store = Redux.createStore(Redux.combineReducers({
+            todos,
+            goals
+        }))
 
         /** listens to state changes */
         store.subscribe(() => {
@@ -165,7 +189,7 @@
             const name = input.value;
             input.value = '';
 
-            store.dispatch(addTodoAction({
+            checkAndDispatch(store, addTodoAction({
                 name,
                 complete: false,
                 id: generateId(),
@@ -177,7 +201,7 @@
             const name = input.value;
             input.value = '';
 
-            store.dispatch(addGoalAction({
+            checkAndDispatch(store, addGoalAction({
                 id: generateId(),
                 name
             }))
@@ -202,14 +226,14 @@
             const text = document.createTextNode(todo.name);
 
             const removeBtn = createRemoveButton (() => {
-                store.dispatch(removeTodoAction(todo.id))
+                checkAndDispatch(store, removeTodoAction(todo.id))
             })
 
             node.appendChild(text);
             node.appendChild(removeBtn);
             node.style.textDecoration = todo.complete ? 'line-through' : 'none';
             node.addEventListener('click', () => {
-                store.dispatch(toggleTodoAction(todo.id))
+                checkAndDispatch(store, toggleTodoAction(todo.id))
             })
 
             document.getElementById('todos')
@@ -221,7 +245,7 @@
             const text = document.createTextNode(goal.name);
 
             const removeBtn = createRemoveButton(() => {
-                store.dispatch(removeGoalAction(goal.id))
+                checkAndDispatch(store, removeGoalAction(goal.id))
             })
 
             node.appendChild(text);
