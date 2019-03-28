@@ -164,12 +164,21 @@
 
         }
 
+        const logger = (store) => (next) => (action) => {
+            console.group(action.type)
+                console.log('The action: ', action)
+                const result = next(action)
+                console.log('New State: ', store.getState())
+            console.groupEnd()
+            return result
+        }
+
         /** must pass a reducer function when invoked */
         // const store = createStore(app)
         const store = Redux.createStore(Redux.combineReducers({
             todos,
             goals
-        }), Redux.applyMiddleware(checker))
+        }), Redux.applyMiddleware(checker, logger, notifyer))
 
         /** listens to state changes */
         store.subscribe(() => {
