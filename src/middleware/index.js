@@ -1,12 +1,11 @@
 import checker from './checker'
 import logger from './logger'
-import notifyer from './notifyer'
+// import notifyer from './notifyer'
 import thunk from 'redux-thunk'
 import { applyMiddleware } from 'redux'
 
-export default applyMiddleware({
+export default applyMiddleware(
     thunk,
-    chekcer,
-    logger,
-    notifyer
-})
+    checker,
+    logger
+)
