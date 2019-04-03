@@ -411,7 +411,6 @@
 
         function connect (mapStateToProps) {
             return (Component) => {
-                /**  */
                 class Receiver extends React.Component {
                     /** Know when the store changes */
                     componentDidMount () {
@@ -425,6 +424,7 @@
                         this.unsubscribe()
                     }
                     render() {
+                        /** What state is needed - mapStateToProps */
                         const { dispatch, getState } = this.props.store
                         const state = getState()
                         const stateNeeded = mapStateToProps(state)
@@ -432,7 +432,7 @@
                     }
                 }
 
-                /** get the state from context */
+                /** Get the state from Context */
                 class ConnectedComponent extends React.Component {
                     render() {
                         return (
